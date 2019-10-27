@@ -23,11 +23,21 @@ var city = "";
 // button listener
 $("#search_button").on("click", function () {
     city = $("#city_input").val();
+    saveCitySearch(city);
+    getCityInfo(city);
+});
+
+$("#city_button").on("click", function () {
+    city = $(this).text();
+    getCityInfo(city);
+});
+
+function getCityInfo (city) {
     var cityURL = (`${baseURLCity}?${queryParam}=${city}&${appIDParam}=${apiKey}`); 
-    var forecastURL = (`${baseURLForecast}?${queryParam}=${city}&${appIDParam}=${apiKey}`); //
+    var forecastURL = (`${baseURLForecast}?${queryParam}=${city}&${appIDParam}=${apiKey}`);
     var cityInfo = {};
     var UVIInfo = {};
-
+    var forecastInfo = {};
     var promise = api.call(cityURL, "GET"); //make API call, then get the current results and make another one for UVI
     promise.then(function(result){
         cityInfo = result;
@@ -43,11 +53,68 @@ $("#search_button").on("click", function () {
     });
     var promise = api.call(forecastURL, "GET");
     promise.then(function(result){
-        console.log(result);
+        forecastInfo = result;
+        console.log(forecastInfo);
     });
+}
 
+function populateCurrentWeather (cityInfo, UVIInfo) {
 
+}
 
-})
+function populateForecast (forecastInfo) {
 
+}
 
+function saveCitySearch (city) {
+    citiesList = loadFromLocalStorage("cities");
+    if (citiesList) {
+        for (c of citiesList) {
+            if (c.name === city) { // this part will exit the function, if this city has been already saved before
+                return; 
+            }
+        }
+    }
+    appendCity(city);
+    cityObj = {name: city};
+    updateLocalStorage("cities", cityObj);
+}
+
+function updateLocalStorage (key, newItem) {
+    storedItem = JSON.parse(window.localStorage.getItem(key));
+    if (!storedItem) {
+        storedItem = [newItem];
+    }
+    else {
+        storedItem.push(newItem);
+    }
+    window.localStorage.setItem(key, JSON.stringify(storedItem));
+}
+
+function loadFromLocalStorage (key) { 
+    storedItem = JSON.parse(window.localStorage.getItem(key));
+    if (!storedItem) {
+        return;
+    }
+    else {
+        return storedItem;
+    }
+}
+
+function appendCity (city) {
+    $("#saved_search").append(`<li class="list-group-item">${city}</li>`);
+}
+
+function preLoadSearchHistory () {
+    citiesList = loadFromLocalStorage("cities");
+    if (!citiesList) {
+        return;
+    }
+    else {
+        for (c of citiesList) {
+            appendCity(c.name);
+        }
+    }
+}
+
+preLoadSearchHistory();
