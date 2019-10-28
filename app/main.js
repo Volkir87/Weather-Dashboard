@@ -11,6 +11,8 @@ them on page reload, displaying the results.
 var baseURLCity = "http://api.openweathermap.org/data/2.5/weather";
 var baseURLUvi = "http://api.openweathermap.org/data/2.5/uvi"
 var baseURLForecast = "http://api.openweathermap.org/data/2.5/forecast";
+var baseURLIcon = "http://openweathermap.org/img/wn/";
+var urlIconSuffix = "@2x.png";
 var apiKey = "0f6e2259330e30a75efb14a4aaa515ba";
 var appIDParam = "APPID";
 var queryParam = "q";
@@ -24,11 +26,6 @@ var city = "";
 $("#search_button").on("click", function () {
     city = $("#city_input").val();
     saveCitySearch(city);
-    getCityInfo(city);
-});
-
-$("#city_button").on("click", function () {
-    city = $(this).text();
     getCityInfo(city);
 });
 
@@ -49,6 +46,7 @@ function getCityInfo (city) {
         promise.then(function(result){
             UVIInfo = result;
             console.log(UVIInfo);
+            populateCurrentWeather (cityInfo, UVIInfo);
         });
     });
     var promise = api.call(forecastURL, "GET");
@@ -59,7 +57,23 @@ function getCityInfo (city) {
 }
 
 function populateCurrentWeather (cityInfo, UVIInfo) {
-
+    var cityName = cityInfo.name;
+    var date = moment.unix(cityInfo.dt).format("MM/DD/YYYY");
+    var temp = Math.round((cityInfo.main.temp - 273.15),0); //converting from Kalvins to Celsius
+    var humidity = cityInfo.main.humidity + "%";
+    var windSpeed = cityInfo.wind.speed;
+    var uvi = UVIInfo.value;
+    var icon = cityInfo.weather[0].icon;
+    $("#city_name").text(`${cityName} ${date}`);
+    $("#city_name").append($("<img>").attr("src",`${baseURLIcon}${icon}${urlIconSuffix}`));
+    $("#temp").text(`Temperature: ${temp}°C`);
+    $("#hum").text(`Humidity: ${humidity}`);
+    $("#wind").text(`Wind Speed: ${windSpeed} m/s`);
+    $("#uvi").text(`${uvi}`);
+    uvi < 3 ? $("#uvi").attr("class", "badge badge-pill badge-success") : (
+        uvi < 8 ? $("#uvi").attr("class", "badge badge-pill badge-warning") 
+        : $("#uvi").attr("class", "badge badge-pill badge-danger")
+    );
 }
 
 function populateForecast (forecastInfo) {
@@ -102,7 +116,12 @@ function loadFromLocalStorage (key) {
 }
 
 function appendCity (city) {
-    $("#saved_search").append(`<li class="list-group-item">${city}</li>`);
+    $("#saved_search").append(`<li class="list-group-item city_button" id="city_${city}">${city}</li>`);
+    $("li[id^='city_']").unbind().click(function () { //had to use .unbind for the event to fire only once
+        city = $(this).text();
+        getCityInfo(city);
+        //console.log(`calling a city_button for ${city}`);
+    });
 }
 
 function preLoadSearchHistory () {

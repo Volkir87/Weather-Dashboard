@@ -7,6 +7,7 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="assets/css/styles.css" type="text/css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" integrity="sha256-4iQZ6BVL4qNKlQ27TExEhBN1HFPvAvAMbFavKKosSWQ=" crossorigin="anonymous" defer></script>
         <script type="text/javascript" src="app/api.js" defer></script>
         <script type="text/javascript" src="app/main.js" defer></script>
         <title>Weather Dashboard</title>
@@ -35,12 +36,14 @@
             </div>
             <div class="col-sm-8 col-lg-9">
                 <div class="m-md-4 m-1">
-                    <div class="container border rounded">
+                    <div class="container border rounded p-3">
                         <h2 id="city_name">...</h2>
-                        <p class="mt-4">Temperature: </p>
-                        <p class="mt-4">Humidity: </p>
-                        <p class="mt-4">Wind speed: </p>
-                        <p class="mt-4">UV Index: </p>
+                        <p class="mt-4" id="temp">Temperature: </p>
+                        <p class="mt-4" id="hum">Humidity: </p>
+                        <p class="mt-4" id="wind">Wind speed: </p>
+                        <div class="mt-4">UV Index: 
+                            <span id="uvi" class="badge badge-pill"></span>
+                        </div>
                     </div>
                     <div class="flex mt-4">
                         <h2>5-day Forecast:</h2>
