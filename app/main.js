@@ -38,21 +38,19 @@ function getCityInfo (city) {
     var promise = api.call(cityURL, "GET"); //make API call, then get the current results and make another one for UVI
     promise.then(function(result){
         cityInfo = result;
-        console.log(cityInfo);
         var lon = cityInfo.coord.lon;
         var lat = cityInfo.coord.lat;
         var uviURL = (`${baseURLUvi}?${lonParam}=${lon}&${latParam}=${lat}&${appIDParam}=${apiKey}`);
         var promise = api.call(uviURL, "GET");
         promise.then(function(result){
             UVIInfo = result;
-            console.log(UVIInfo);
             populateCurrentWeather (cityInfo, UVIInfo);
         });
     });
     var promise = api.call(forecastURL, "GET");
     promise.then(function(result){
         forecastInfo = result;
-        console.log(forecastInfo);
+        populateForecast (forecastInfo);
     });
 }
 
@@ -77,7 +75,19 @@ function populateCurrentWeather (cityInfo, UVIInfo) {
 }
 
 function populateForecast (forecastInfo) {
-
+    var points = [4, 12, 20, 28, 36]; // getting info only as of 12:00 PM every day
+    for (i in points) {
+        var cardID = "forecast_"+(parseInt(i)+1);
+        var date = moment.unix(forecastInfo.list[points[i]].dt).format("MM/DD/YYYY");
+        var temp = Math.round((forecastInfo.list[points[i]].main.temp - 273.15),0);
+        var humidity = forecastInfo.list[points[i]].main.humidity + "%";
+        var icon = forecastInfo.list[points[i]].weather[0].icon;
+        $(`#${cardID}`).children(".f_city_name").text(date);
+        $(`#${cardID}`).children(".f_temp").text(`Temp: ${temp}°C`);
+        $(`#${cardID}`).children(".f_hum").text(`Humidity: ${humidity}`);
+        $(`#${cardID}`).children(".f_image").children("img").remove(); //clear up existing image
+        $(`#${cardID}`).children(".f_image").append($("<img>").attr("src",`${baseURLIcon}${icon}${urlIconSuffix}`));
+    }
 }
 
 function saveCitySearch (city) {
@@ -137,3 +147,5 @@ function preLoadSearchHistory () {
 }
 
 preLoadSearchHistory();
+
+// results.list. 4, 12, 20, 28, 36 .main.temp (.main.humidity), .weather.0.icon .dt
