@@ -130,7 +130,6 @@ function appendCity (city) {
     $("li[id^='city_']").unbind().click(function () { //had to use .unbind for the event to fire only once
         city = $(this).text();
         getCityInfo(city);
-        //console.log(`calling a city_button for ${city}`);
     });
 }
 
@@ -147,5 +146,3 @@ function preLoadSearchHistory () {
 }
 
 preLoadSearchHistory();
-
-// results.list. 4, 12, 20, 28, 36 .main.temp (.main.humidity), .weather.0.icon .dt
