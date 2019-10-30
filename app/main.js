@@ -8,9 +8,9 @@ It will include: searching for weather, saving the search results to the local s
 them on page reload, displaying the results. 
 */
 
-var baseURLCity = "http://api.openweathermap.org/data/2.5/weather";
-var baseURLUvi = "http://api.openweathermap.org/data/2.5/uvi"
-var baseURLForecast = "http://api.openweathermap.org/data/2.5/forecast";
+var baseURLCity = "https://api.openweathermap.org/data/2.5/weather";
+var baseURLUvi = "https://api.openweathermap.org/data/2.5/uvi"
+var baseURLForecast = "https://api.openweathermap.org/data/2.5/forecast";
 var baseURLIcon = "http://openweathermap.org/img/wn/";
 var urlIconSuffix = "@2x.png";
 var apiKey = "0f6e2259330e30a75efb14a4aaa515ba";
