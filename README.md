@@ -11,7 +11,7 @@ Search section consists of the search input bar and saved search results. Once t
 
 The results section display the current city info and the 5-days forecast. The results show temperature, humidity, UV index and also the icon of the weather conditions.
 
-![screenshot](assets\images\Weather-Dashboard-screenshot.png)
+![screenshot](assets/images/Weather-Dashboard-screenshot.PNG)
 
 Address of the application:
 https://volkir87.github.io/Weather-Dashboard/
